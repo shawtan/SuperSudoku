@@ -2,19 +2,24 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 
-
+/**
+ * Represents a solved sudoku board
+ * @author shaw
+ *
+ */
 public class Board {
-
+	//TODO: Make square cells and strange cells consistent
 	private int cell;
 
 	private int length;
 
 	private int[][] grid;
+	private int[][] regions;
 
 
 	public static void main(String[] args){
 
-		Board b = new Board(4);
+		Board b = new Board(5);
 
 		//				System.out.println(b.checkGrid(new int[][]{{3,4,4,1},
 		//						{2,1,2,3},
@@ -41,7 +46,7 @@ public class Board {
 		}
 
 		grid = new int[length][length];
-
+		regions = makeStrangeRegions();
 		generateBoard();
 
 		System.out.println(this);
@@ -117,57 +122,6 @@ public class Board {
 		return false;
 	}
 
-	private boolean checkStrangeRegion(int[][] grid){
-		
-		HashSet<Integer>[] digits = (HashSet<Integer>[])new HashSet[4];
-		for (int i = 0; i < digits.length; i++) {
-			digits[i] = new HashSet<Integer>();
-		}
-		
-		int count = 0;
-		
-		for (int a = 0; a < length; a++) {
-			for (int b = 0; b <= a; b++) {	
-				System.out.println("a:"+a+" b:"+b);
-				count++;
-				if (count > length){
-					return true;
-				}
-				int n;
-				n = grid[0 + b][0 + a];
-				if (! digits[0].add(n)){
-					return false;
-				} else if (n > length){
-					return false;
-				}
-
-				n = grid[0 + a][length-1 - b];
-				if (! digits[1].add(n)){
-					return false;
-				} else if (n > length){
-					return false;
-				}
-				n = grid[length-1 - b][length-1 - a];
-				if (! digits[2].add(n)){
-					return false;
-				} else if (n > length){
-					return false;
-				}
-				n = grid[length-1 - a][0 + b];
-				if (! digits[3].add(n)){
-					return false;
-				} else if (n > length){
-					return false;
-				}
-				
-			}
-		}
-
-		return true;
-		
-		
-	}
-	
 	private boolean checkGrid(int[][] grid, boolean complete){
 
 		if (complete){
@@ -179,8 +133,7 @@ public class Board {
 				}
 			}
 		}
-		
-		
+
 		//Check rows and columns
 		for (int i = 0; i < grid.length; i++) {
 
@@ -195,22 +148,141 @@ public class Board {
 
 		//Check cells
 		if (cell > 0){
-			for (int i = 0; i < cell; i++) {
-				for (int j = 0; j < cell; j++) {				
-					if (!checkRegion(grid, i*cell,j*cell,cell, cell)){
-						return false;
-					}
-				}
+			if (!checkSquareRegion(grid)){
+				return false;
 			}
-		} 
+		} else {
+			if (!checkStrangeRegion(grid)){
+				return false;
+			}
+		}
 
-//		if (!checkStrangeRegion(grid)){
-//			return false;
-//		}
+		//		if (!checkStrangeRegion(grid)){
+		//			return false;
+		//		}
 		//Check diagonals, maybe? NVM no valid solution
 
 
 		return true;
+
+	}
+
+	private boolean checkSquareRegion(int[][] grid){
+
+		for (int i = 0; i < cell; i++) {
+			for (int j = 0; j < cell; j++) {				
+				if (!checkRegion(grid, i*cell,j*cell,cell, cell)){
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+
+	private int[][] makeStrangeRegions(){
+
+		if (length <=4){
+			System.out.println("Length invalid");
+			return null;
+		}
+
+		int[][] grid = new int[length][length];
+
+		fillStrangeCorners(grid);
+
+		int section = 5;		//'0' is a valid section
+		int direction = 0; //up, down, left, right
+		while (section < length){
+			int count = 0;
+			fillStrangeSpaces(grid, section, direction);
+			section++;
+			direction++;
+		}
+		return grid;
+	}
+
+	private int[][] fillStrangeCorners(int[][] grid){
+		int count = 0;
+		for (int sum = 0; sum < length; sum++) {
+			for (int a = 0; a <= sum; a++) {
+
+				grid[0 + (sum-a)][0 + a] = 1;
+				grid[0 + a][length-1 - (sum-a)] = 2;
+				grid[length-1 - (sum-a)][length-1 - a] = 3;
+				grid[length-1 - a][0 + (sum-a)] = 4;
+				count++;
+				if (count >= length){
+					return grid;
+				}
+			}
+		}
+
+		return grid;
+	}
+
+	private int[][] fillStrangeSpaces(int[][] grid, int section, int direction){
+
+		direction = direction % 4;
+
+		int count = 0;
+		for (int i = 0; i < grid.length; i++) {
+			for (int j = 0; j < grid.length; j++) {
+				int a,b;
+				a=b=0;
+				switch (direction){
+				case 0:
+					a = i; b = j; break;
+				case 1:
+					a = length-1-i; b = length-1-j; break;
+				case 2:
+					a = j; b = i; break;
+				case 3:
+					a = length-1-j; b = length-1-i; break;
+				default:
+					System.out.println("Direction error");
+				}
+
+				if (grid[a][b] == 0){
+					grid[a][b] = section;
+					count++;
+					if (count >= length){
+						return grid;
+					}
+				}
+			}		
+		}
+		return grid;
+	}
+
+
+	private boolean checkStrangeRegion(int[][] grid){
+
+		//		int[][] regions = makeStrangeRegions();
+
+		HashSet<Integer>[] digits = (HashSet<Integer>[])new HashSet[length];
+		for (int i = 0; i < digits.length; i++) {
+			digits[i] = new HashSet<Integer>();
+		}
+
+		for (int i = 0; i < length; i++) {
+			for (int j = 0; j < length; j++) {
+
+				if (regions[i][j] != 0){
+
+					int n = grid[i][j];
+
+					if (n > 0){
+						if (!digits[regions[i][j]].add(n)){
+							return false;
+						}
+					}
+				}
+
+			}
+		}
+
+		return true;
+
 
 	}
 
@@ -235,10 +307,10 @@ public class Board {
 		return true;
 	}
 
-	private char[][] toChar(){
+	private char[][] toChar(int[][] grid){
 
 		char[][] arr = new char[length][length];
-		
+
 		int change;
 		if (length < 10){
 			change = '0';
@@ -268,11 +340,16 @@ public class Board {
 	}
 
 	public String toString(){
+		return (toString(grid));
+	}
+
+	public String toString(int[][] arr){
+
+		char[][] grid = toChar(arr);
+
 		String s = "";
 
 		int stringLength = 0;
-		
-		char[][] grid = toChar();
 
 		for (int i = 0; i < grid.length; i++) {
 			for (int j = 0; j < grid[0].length; j++) {
@@ -287,14 +364,14 @@ public class Board {
 			s += "\n";
 			if (i==0){
 				stringLength = s.length()-2;}
-			
+
 			if ((i+1) % cell == 0){
 				for (int j = 0; j < stringLength; j++) {
 					s += "-";
 				}
 				s += "\n";
 			}
-			
+
 		}
 
 		//Make a border at the top
@@ -305,7 +382,6 @@ public class Board {
 		s += "\n";
 
 		return s;
-
 
 	}
 
