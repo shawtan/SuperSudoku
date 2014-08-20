@@ -14,7 +14,7 @@ public class Board {
 
 	public static void main(String[] args){
 
-		Board b = new Board(4);
+		Board b = new Board(6);
 
 		//				System.out.println(b.checkGrid(new int[][]{{3,4,4,1},
 		//						{2,1,2,3},
@@ -117,57 +117,68 @@ public class Board {
 		return false;
 	}
 
+	/**
+	 * Checks if blocks in a zig-zag formation are unique.
+	 * In other words, the zig-zag shape replaces the traditional 'cells'
+	 * @param grid
+	 * @return Whether the cells contain unique numbers
+	 */
 	private boolean checkStrangeRegion(int[][] grid){
-		
+
 		HashSet<Integer>[] digits = (HashSet<Integer>[])new HashSet[4];
 		for (int i = 0; i < digits.length; i++) {
 			digits[i] = new HashSet<Integer>();
 		}
-		
+
 		int count = 0;
-		
+
 		for (int a = 0; a < length; a++) {
 			for (int b = 0; b <= a; b++) {	
 				System.out.println("a:"+a+" b:"+b);
 				count++;
 				if (count > length){
+					System.out.println("strange true");
 					return true;
 				}
 				int n;
-				n = grid[0 + b][0 + a];
-				if (! digits[0].add(n)){
-					return false;
-				} else if (n > length){
-					return false;
-				}
+				n = grid[0 + b][0 + a];				
+				if (n > 0)
+					if (! digits[0].add(n)){
+						return false;
+					} else if (n > length){
+						return false;
+					}
 
-				n = grid[0 + a][length-1 - b];
-				if (! digits[1].add(n)){
-					return false;
-				} else if (n > length){
-					return false;
-				}
-				n = grid[length-1 - b][length-1 - a];
-				if (! digits[2].add(n)){
-					return false;
-				} else if (n > length){
-					return false;
-				}
-				n = grid[length-1 - a][0 + b];
-				if (! digits[3].add(n)){
-					return false;
-				} else if (n > length){
-					return false;
-				}
-				
+				n = grid[0 + a][length-1 - b];		
+				if (n > 0)
+					if (! digits[1].add(n)){
+						return false;
+					} else if (n > length){
+						return false;
+					}
+				n = grid[length-1 - b][length-1 - a];		
+				if (n > 0)
+					if (! digits[2].add(n)){
+						return false;
+					} else if (n > length){
+						return false;
+					}
+				n = grid[length-1 - a][0 + b];		
+				if (n > 0)
+					if (! digits[3].add(n)){
+						return false;
+					} else if (n > length){
+						return false;
+					}
+
 			}
 		}
 
 		return true;
-		
-		
+
+
 	}
-	
+
 	private boolean checkGrid(int[][] grid, boolean complete){
 
 		if (complete){
@@ -179,8 +190,8 @@ public class Board {
 				}
 			}
 		}
-		
-		
+
+
 		//Check rows and columns
 		for (int i = 0; i < grid.length; i++) {
 
@@ -203,10 +214,11 @@ public class Board {
 				}
 			}
 		} 
-
-//		if (!checkStrangeRegion(grid)){
-//			return false;
-//		}
+		else {
+			if (!checkStrangeRegion(grid)){
+				return false;
+			}
+		}
 		//Check diagonals, maybe? NVM no valid solution
 
 
@@ -238,7 +250,7 @@ public class Board {
 	private char[][] toChar(){
 
 		char[][] arr = new char[length][length];
-		
+
 		int change;
 		if (length < 10){
 			change = '0';
@@ -271,7 +283,7 @@ public class Board {
 		String s = "";
 
 		int stringLength = 0;
-		
+
 		char[][] grid = toChar();
 
 		for (int i = 0; i < grid.length; i++) {
@@ -287,14 +299,14 @@ public class Board {
 			s += "\n";
 			if (i==0){
 				stringLength = s.length()-2;}
-			
+
 			if ((i+1) % cell == 0){
 				for (int j = 0; j < stringLength; j++) {
 					s += "-";
 				}
 				s += "\n";
 			}
-			
+
 		}
 
 		//Make a border at the top
