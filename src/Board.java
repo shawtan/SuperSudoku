@@ -14,42 +14,52 @@ public class Board {
 
 	public static void main(String[] args){
 
-		Board b = new Board(3);
+		Board b = new Board(4);
 
-//				System.out.println(b.checkGrid(new int[][]{{3,4,4,1},
-//						{2,1,2,3},
-//						{2,4,1,3},
-//						{1,3,4,2}}
-//						, true));
+		//				System.out.println(b.checkGrid(new int[][]{{3,4,4,1},
+		//						{2,1,2,3},
+		//						{2,4,1,3},
+		//						{1,3,4,2}}
+		//						, true));
 
 
 	}
-	
-	//Note: Size and amount must be equal
-	public Board(int size){
-		this.cell = size;
 
-		this.length = cell * cell;
+	/**
+	 * Constructor
+	 * @param size The length of a cell
+	 */
+	public Board(int size){
+		//		this.cell = size;
+		//		this.length = cell * cell;
+
+		this.length = size;
+		this.cell = (int)Math.sqrt(length);
+		if (cell*cell != length){
+			//Not a perfect square
+			cell = -length;
+		}
 
 		grid = new int[length][length];
 
 		generateBoard();
-		
+
 		System.out.println(this);
-		
-		System.out.println(checkGrid(grid,true));
+
+		//		System.out.println(checkGrid(grid,true));
 	}
 
 	public int[][] getGrid(){
 		return grid;
 	}
-	
-	
+
+
 	public void generateBoard(){
+		if (!fillGrid(grid, 0,0)){
+			System.out.println("No valid board can be made");
+		}
 
-		System.out.println(fillGrid(grid, 0,0));
-
-//		convertBoard();
+		//		convertBoard();
 
 	}
 
@@ -61,6 +71,8 @@ public class Board {
 	 * @return Whether the attempt was successful
 	 */
 	private boolean fillGrid(int[][] grid, int r, int c){
+
+		//		System.out.println("r: " + r + " c: " + c);
 
 		if (!checkGrid(grid, false)){
 			return false;
@@ -85,6 +97,7 @@ public class Board {
 			numbers.add(i);
 		}
 
+		//A random order of numbers allows different boards to be made
 		Collections.shuffle(numbers);
 
 		int[][] newGrid = cloneArray(grid);
@@ -101,52 +114,113 @@ public class Board {
 
 
 		}
-
-
-
 		return false;
-
-
 	}
 
-	private boolean checkGrid(int[][] grid, boolean complete){
+	private boolean checkStrangeRegion(int[][] grid){
+		
+		HashSet<Integer>[] digits = (HashSet<Integer>[])new HashSet[4];
+		for (int i = 0; i < digits.length; i++) {
+			digits[i] = new HashSet<Integer>();
+		}
+		
+		int count = 0;
+		
+		for (int a = 0; a < length; a++) {
+			for (int b = 0; b <= a; b++) {	
+				System.out.println("a:"+a+" b:"+b);
+				count++;
+				if (count > length){
+					return true;
+				}
+				int n;
+				n = grid[0 + b][0 + a];
+				if (! digits[0].add(n)){
+					return false;
+				} else if (n > length){
+					return false;
+				}
 
-		//Check rows and columns
-		for (int i = 0; i < grid.length; i++) {
-			
-			if (!checkRegion(grid, i,0,1, length, complete)){
-				return false;
+				n = grid[0 + a][length-1 - b];
+				if (! digits[1].add(n)){
+					return false;
+				} else if (n > length){
+					return false;
+				}
+				n = grid[length-1 - b][length-1 - a];
+				if (! digits[2].add(n)){
+					return false;
+				} else if (n > length){
+					return false;
+				}
+				n = grid[length-1 - a][0 + b];
+				if (! digits[3].add(n)){
+					return false;
+				} else if (n > length){
+					return false;
+				}
+				
 			}
-			if (!checkRegion(grid, 0,i,length, 1, complete)){
-				return false;
-			}
-			
 		}
 
-		//Check cells
-		for (int i = 0; i < cell; i++) {
-			for (int j = 0; j < cell; j++) {				
-				if (!checkRegion(grid, i*cell,j*cell,cell, cell, complete)){
-					return false;
+		return true;
+		
+		
+	}
+	
+	private boolean checkGrid(int[][] grid, boolean complete){
+
+		if (complete){
+			//Check for 0's
+			for (int i = 0; i < grid.length; i++) {
+				for (int j = 0; j < grid.length; j++) {
+					if (grid[i][j] == 0)
+						return false;
 				}
 			}
 		}
+		
+		
+		//Check rows and columns
+		for (int i = 0; i < grid.length; i++) {
+
+			if (!checkRegion(grid, i,0,1, length)){
+				return false;
+			}
+			if (!checkRegion(grid, 0,i,length, 1)){
+				return false;
+			}
+
+		}
+
+		//Check cells
+		if (cell > 0){
+			for (int i = 0; i < cell; i++) {
+				for (int j = 0; j < cell; j++) {				
+					if (!checkRegion(grid, i*cell,j*cell,cell, cell)){
+						return false;
+					}
+				}
+			}
+		} 
+
+//		if (!checkStrangeRegion(grid)){
+//			return false;
+//		}
+		//Check diagonals, maybe? NVM no valid solution
+
 
 		return true;
 
 	}
 
-	private boolean checkRegion(int[][] grid, int x, int y, int dx, int dy, boolean complete){
+	private boolean checkRegion(int[][] grid, int x, int y, int dx, int dy){
 
 		HashSet<Integer> digits = new HashSet<Integer>(length);
 
 		for (int a = 0; a < dx; a++) {
 			for (int b = 0; b < dy; b++) {				
 				int n = grid[x + a][y + b];
-
-				if (complete && n == 0){
-					return false;
-				}
 
 				if (n > 0){
 					if (! digits.add(n)){
@@ -161,7 +235,9 @@ public class Board {
 		return true;
 	}
 
-	private void convertBoard(){
+	private char[][] toChar(){
+
+		char[][] arr = new char[length][length];
 		
 		int change;
 		if (length < 10){
@@ -169,17 +245,16 @@ public class Board {
 		} else {
 			change = 'A';
 		}
-		
+
 		for (int i = 0; i < grid.length; i++) {
 			for (int j = 0; j < grid[0].length; j++) {
-				grid[i][j] += change;
+				arr[i][j] = (char) (grid[i][j] + change);
 			}
 		}
-		
-		
-		
+
+		return arr;
 	}
-	
+
 	private int[][] cloneArray(int[][] arr){
 
 		int[][] newArr = new int[length][length];
@@ -195,13 +270,11 @@ public class Board {
 	public String toString(){
 		String s = "";
 
+		int stringLength = 0;
+		
+		char[][] grid = toChar();
+
 		for (int i = 0; i < grid.length; i++) {
-			if (i % cell == 0){
-				for (int j = 0; j < (length+cell)*2 +1; j++) {
-					s += "-";
-				}
-				s += "\n";
-			}
 			for (int j = 0; j < grid[0].length; j++) {
 
 				if (j % cell == 0){
@@ -211,12 +284,23 @@ public class Board {
 
 			}
 			s += "| ";
-
 			s += "\n";
+			if (i==0){
+				stringLength = s.length()-2;}
+			
+			if ((i+1) % cell == 0){
+				for (int j = 0; j < stringLength; j++) {
+					s += "-";
+				}
+				s += "\n";
+			}
+			
 		}
 
-		for (int j = 0; j < (length+cell)*2+1; j++) {
-			s += "-";
+		//Make a border at the top
+		s = "\n" + s;
+		for (int j = 0; j < stringLength; j++) {
+			s = "-" + s;
 		}
 		s += "\n";
 
