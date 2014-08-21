@@ -40,10 +40,10 @@ public class Board {
 
 		this.length = size;
 		this.cell = (int)Math.sqrt(length);
-		if (cell*cell != length){
-			//Not a perfect square
-			cell = -length;
-		}
+//		if (cell*cell != length){
+//			//Not a perfect square
+//			cell = -length;
+//		}
 
 		grid = new int[length][length];
 		regions = makeStrangeRegions();
@@ -58,6 +58,9 @@ public class Board {
 		return grid;
 	}
 
+	public int[][] getRegions(){
+		return regions;
+	}
 
 	public void generateBoard(){
 		if (!fillGrid(grid, 0,0)){
@@ -147,15 +150,15 @@ public class Board {
 		}
 
 		//Check cells
-		if (cell > 0){
-			if (!checkSquareRegion(grid)){
-				return false;
-			}
-		} else {
+//		if (cell > 0){
+//			if (!checkSquareRegion(grid)){
+//				return false;
+//			}
+//		} else {
 			if (!checkStrangeRegion(grid)){
 				return false;
 			}
-		}
+//		}
 
 		//		if (!checkStrangeRegion(grid)){
 		//			return false;
@@ -178,9 +181,35 @@ public class Board {
 		}
 		return true;
 	}
+	
+	private int[][] makeSquareRegions(){
+		
+		int[][] grid = new int[length][length];
+		
+		int section = 0;
+		
+		for (int i = 0; i < cell; i++) {
+			for (int j = 0; j < cell; j++) {				
+				
+				for (int a = 0; a < cell; a++) {
+					for (int b = 0; b < cell; b++) {
+						grid[i*cell+a][j*cell+b] = section;
+					}
+				}
+				section++;
+			}
+		}
+
+		return grid;
+		
+	}
 
 	private int[][] makeStrangeRegions(){
 
+		if (cell*cell == length){
+			return makeSquareRegions();
+		}
+		
 		if (length <=4){
 			System.out.println("Length invalid");
 			return null;
