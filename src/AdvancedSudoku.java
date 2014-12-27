@@ -89,10 +89,10 @@ public class AdvancedSudoku extends JFrame {
 		//Draw the numbers/colors
 		for (int i = 0; i < length; i++) {
 			for (int j = 0; j < length; j++) {
-				labels[i][j] = new JLabel(String.valueOf(grid[i][j]), JLabel.CENTER);
+				labels[i][j] = new JLabel(tokenValue(grid[i][j]), JLabel.CENTER);
 				labels[i][j].setBackground(colors[regions[i][j]]);
 				labels[i][j].setOpaque(true);
-				labels[i][j].setFont(new Font("Times", Font.BOLD, 40));
+				labels[i][j].setFont(new Font("Times", Font.BOLD, 30));
 				gamePanel.add(labels[i][j]);
 			}
 		}
@@ -105,6 +105,17 @@ public class AdvancedSudoku extends JFrame {
 		
 		
 		
+	}
+	
+	private String tokenValue(int n){
+		
+		if (n < 10){
+			return Character.toString((char) (n + '0'));
+		} else if (n == 16) {
+			return "0";
+		} else {
+			return Character.toString((char) (n + 'A' - 10));
+		}
 	}
 
 }

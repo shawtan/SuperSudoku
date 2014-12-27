@@ -1,8 +1,21 @@
+import java.util.LinkedList;
+
 
 public class ColorGeneration {
 
 	public static void main(String[] args) {
 
+		
+		LinkedList<Integer> l = new LinkedList<Integer>();
+		l.add(1);
+		l.add(3);
+		l.add(5);
+		l.add(4);
+		
+		System.out.println(l.remove(3));
+		System.out.println(l.add(-2));
+		System.out.println(l);
+		
 		int[] cc  = {
 				0xFFB300, // Vivid Yellow
 				0x803E75, // Strong Purple

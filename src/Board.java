@@ -13,20 +13,13 @@ public class Board {
 
 	private int length;
 
-	private int[][] grid;
+	private int[][] puzzle;
 	private int[][] regions;
 
 
 	public static void main(String[] args){
 
 		Board b = new Board(5);
-
-		//				System.out.println(b.checkGrid(new int[][]{{3,4,4,1},
-		//						{2,1,2,3},
-		//						{2,4,1,3},
-		//						{1,3,4,2}}
-		//						, true));
-
 
 	}
 
@@ -45,18 +38,18 @@ public class Board {
 //			cell = -length;
 //		}
 
-		grid = new int[length][length];
+		puzzle = new int[length][length];
 		regions = makeStrangeRegions();
 		System.out.println("Done regions");
 		generateBoard();
 
+		System.out.println("Done board");
 		System.out.println(this);
 
-		//		System.out.println(checkGrid(grid,true));
 	}
 
 	public int[][] getGrid(){
-		return grid;
+		return puzzle;
 	}
 
 	public int[][] getRegions(){
@@ -64,7 +57,19 @@ public class Board {
 	}
 
 	public void generateBoard(){
-		if (!fillGrid(grid, 0,0)){
+		
+		LinkedList<Integer> regNum[] = new LinkedList[length];
+		
+		for (int i = 0; i < regNum.length; i++) {
+			regNum[i] = new LinkedList<Integer>();
+			for (int j = 1; j <= length; j++) {
+				regNum[i].add(j);
+			}
+			Collections.shuffle(regNum[i]);
+//			System.out.println(regNum[i]);
+		}
+		
+		if (!fillGrid(puzzle, 0,0, regNum)){
 			System.out.println("No valid board can be made");
 		}
 
@@ -79,13 +84,9 @@ public class Board {
 	 * @param c
 	 * @return Whether the attempt was successful
 	 */
-	private boolean fillGrid(int[][] grid, int r, int c){
+	private boolean fillGrid(int[][] grid, int r, int c, LinkedList<Integer> regNum[]){
 
 		//		System.out.println("r: " + r + " c: " + c);
-
-		if (!checkGrid(grid, false)){
-			return false;
-		}
 
 		if (c >= length){
 			c = 0;
@@ -93,95 +94,65 @@ public class Board {
 		}
 
 		if (r >= length){
-			if ( checkGrid(grid, true)){
-				this.grid = grid;
+				this.puzzle = grid;
 				return true;
-			} else {
-				return false;
-			}
 		}
 
-		LinkedList<Integer> numbers = new LinkedList<Integer>();
-		for (int i = 1; i <= length; i++) {
-			numbers.add(i);
-		}
+//		LinkedList<Integer> numbers = new LinkedList<Integer>();
+//		for (int i = 1; i <= length; i++) {
+//			numbers.add(i);
+//		}
+//
+//
+//		//A random order of numbers allows different boards to be made
+//		Collections.shuffle(numbers);
 
-		//A random order of numbers allows different boards to be made
-		Collections.shuffle(numbers);
+		int reg = regions[r][c];
 
-		int[][] newGrid = cloneArray(grid);
+		for (int i = 0; i < regNum[reg].size(); i++) {
 
-		while(!numbers.isEmpty()){
-
-			int n = numbers.remove();
-
-			newGrid[r][c] = (char)n;
-
-			if (fillGrid(newGrid,r,c+1)){
-				return true;
-			}
-
-
-		}
-		return false;
-	}
-
-	private boolean checkGrid(int[][] grid, boolean complete){
-
-		if (complete){
-			//Check for 0's
-			for (int i = 0; i < grid.length; i++) {
-				for (int j = 0; j < grid.length; j++) {
-					if (grid[i][j] == 0)
-						return false;
+			int n = regNum[reg].remove(i);
+						
+			if (validNum(n, grid, r, c)){
+				
+				grid[r][c] = n;
+				
+				if (fillGrid(grid, r, c+1, regNum)){
+					return true;
 				}
 			}
+			
+			grid[r][c] = 0;
+			regNum[reg].add(n);
 		}
-
-		//Check rows and columns
-		for (int i = 0; i < grid.length; i++) {
-
-			if (!checkRegion(grid, i,0,1, length)){
-				return false;
-			}
-			if (!checkRegion(grid, 0,i,length, 1)){
-				return false;
-			}
-
-		}
-
-		//Check cells
-//		if (cell > 0){
-//			if (!checkSquareRegion(grid)){
-//				return false;
-//			}
-//		} else {
-			if (!checkStrangeRegion(grid)){
-				return false;
-			}
-//		}
-
-		//		if (!checkStrangeRegion(grid)){
-		//			return false;
-		//		}
-		//Check diagonals, maybe? NVM no valid solution
-
-
-		return true;
-
+		
+		return false;
 	}
-
-	private boolean checkSquareRegion(int[][] grid){
-
-		for (int i = 0; i < cell; i++) {
-			for (int j = 0; j < cell; j++) {				
-				if (!checkRegion(grid, i*cell,j*cell,cell, cell)){
+	
+	private boolean validNum(int n, int[][] grid, int r, int c){
+		
+		//Check in columns and rows
+		for (int i = 0; i < length; i++) {
+			if (grid[r][i] == n || grid[i][c] == n){
+				return false;
+			}
+		}
+		
+		//Check in region
+		int reg = regions[r][c];
+		
+		for (int i = 0; i < length; i++) {
+			for (int j = 0; j < length; j++) {
+				if (regions[i][j] == reg && grid[i][j] == n){
 					return false;
 				}
 			}
 		}
+		
 		return true;
 	}
+
+
 	
 	private int[][] makeSquareRegions(){
 		
@@ -284,6 +255,158 @@ public class Board {
 		return grid;
 	}
 
+	private int[][] cloneArray(int[][] arr){
+
+		int[][] newArr = new int[length][length];
+
+		for (int i = 0; i < newArr.length; i++) {
+			newArr[i] = arr[i].clone();
+		}
+
+		return newArr;
+
+	}
+
+	
+	private char[][] toChar(int[][] grid){
+
+		char[][] arr = new char[length][length];
+
+		int change;
+		if (length < 10){
+			change = '0';
+		} else {
+			change = 'A';
+		}
+
+		for (int i = 0; i < grid.length; i++) {
+			for (int j = 0; j < grid[0].length; j++) {
+				arr[i][j] = (char) (grid[i][j] + change);
+			}
+		}
+
+		return arr;
+	}
+
+
+	public String toString(){
+		return (toString(puzzle));
+	}
+
+	public String toString(int[][] arr){
+
+		char[][] grid = toChar(arr);
+
+		String s = "";
+
+		int stringLength = 0;
+
+		for (int i = 0; i < grid.length; i++) {
+			for (int j = 0; j < grid[0].length; j++) {
+
+				if (j % cell == 0){
+					s += "| ";
+				}
+				s += grid[i][j] + " ";
+
+			}
+			s += "| ";
+			s += "\n";
+			if (i==0){
+				stringLength = s.length()-2;}
+
+			if ((i+1) % cell == 0){
+				for (int j = 0; j < stringLength; j++) {
+					s += "-";
+				}
+				s += "\n";
+			}
+
+		}
+
+		//Make a border at the top
+		s = "\n" + s;
+		for (int j = 0; j < stringLength; j++) {
+			s = "-" + s;
+		}
+		s += "\n";
+
+		return s;
+
+	}
+	
+	//unused
+
+	/*
+	private boolean fullGrid(int[][] grid) {
+		
+		for (int i = 0; i < length; i++) {
+			for (int j = 0; j < length; j++) {
+				if (grid[i][j] == 0){
+					return false;
+				}
+			}
+		}
+		return true;
+		
+	}
+
+	private boolean checkGrid(int[][] grid, boolean complete){
+
+		if (complete){
+			//Check for 0's
+			for (int i = 0; i < grid.length; i++) {
+				for (int j = 0; j < grid.length; j++) {
+					if (grid[i][j] == 0)
+						return false;
+				}
+			}
+		}
+
+		//Check rows and columns
+		for (int i = 0; i < grid.length; i++) {
+
+			if (!checkRegion(grid, i,0,1, length)){
+				return false;
+			}
+			if (!checkRegion(grid, 0,i,length, 1)){
+				return false;
+			}
+
+		}
+
+		//Check cells
+//		if (cell > 0){
+//			if (!checkSquareRegion(grid)){
+//				return false;
+//			}
+//		} else {
+			if (!checkStrangeRegion(grid)){
+				return false;
+			}
+//		}
+
+		//		if (!checkStrangeRegion(grid)){
+		//			return false;
+		//		}
+		//Check diagonals, maybe? NVM no valid solution
+
+
+		return true;
+
+	}
+	private boolean checkSquareRegion(int[][] grid){
+
+		for (int i = 0; i < cell; i++) {
+			for (int j = 0; j < cell; j++) {				
+				if (!checkRegion(grid, i*cell,j*cell,cell, cell)){
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+
 
 	private boolean checkStrangeRegion(int[][] grid){
 
@@ -336,83 +459,5 @@ public class Board {
 
 		return true;
 	}
-
-	private char[][] toChar(int[][] grid){
-
-		char[][] arr = new char[length][length];
-
-		int change;
-		if (length < 10){
-			change = '0';
-		} else {
-			change = 'A';
-		}
-
-		for (int i = 0; i < grid.length; i++) {
-			for (int j = 0; j < grid[0].length; j++) {
-				arr[i][j] = (char) (grid[i][j] + change);
-			}
-		}
-
-		return arr;
-	}
-
-	private int[][] cloneArray(int[][] arr){
-
-		int[][] newArr = new int[length][length];
-
-		for (int i = 0; i < newArr.length; i++) {
-			newArr[i] = arr[i].clone();
-		}
-
-		return newArr;
-
-	}
-
-	public String toString(){
-		return (toString(grid));
-	}
-
-	public String toString(int[][] arr){
-
-		char[][] grid = toChar(arr);
-
-		String s = "";
-
-		int stringLength = 0;
-
-		for (int i = 0; i < grid.length; i++) {
-			for (int j = 0; j < grid[0].length; j++) {
-
-				if (j % cell == 0){
-					s += "| ";
-				}
-				s += grid[i][j] + " ";
-
-			}
-			s += "| ";
-			s += "\n";
-			if (i==0){
-				stringLength = s.length()-2;}
-
-			if ((i+1) % cell == 0){
-				for (int j = 0; j < stringLength; j++) {
-					s += "-";
-				}
-				s += "\n";
-			}
-
-		}
-
-		//Make a border at the top
-		s = "\n" + s;
-		for (int j = 0; j < stringLength; j++) {
-			s = "-" + s;
-		}
-		s += "\n";
-
-		return s;
-
-	}
-
+	*/
 }
