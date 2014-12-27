@@ -7,19 +7,24 @@ import java.util.LinkedList;
  * @author shaw
  *
  */
-public class Board {
+public class Board2 {
+
+	private char[] symbols = {'0', '1', '2', '3', '4', '5', '6', '7','8', '9', 'A', 'B', 'C', 'D', 'E', 'F', 'G'};
+
+	
 	//TODO: Make square cells and strange cells consistent
 	private int cell;
 
 	private int length;
 
-	private int[][] grid;
+	private char[][] grid;
 	private int[][] regions;
+	
 
 
 	public static void main(String[] args){
-
-		Board b = new Board(5);
+		
+		Board2 b = new Board2(5);
 
 		//				System.out.println(b.checkGrid(new int[][]{{3,4,4,1},
 		//						{2,1,2,3},
@@ -34,7 +39,15 @@ public class Board {
 	 * Constructor
 	 * @param size The length of a cell
 	 */
-	public Board(int size){
+	public Board2(int size){
+		
+
+
+		System.out.println(toString(new int[][]{{3,4,4,1},
+								{2,1,2,3},
+								{2,4,1,3},
+								{1,3,4,2}}));
+		
 		//		this.cell = size;
 		//		this.length = cell * cell;
 
@@ -44,10 +57,12 @@ public class Board {
 //			//Not a perfect square
 //			cell = -length;
 //		}
-
-		grid = new int[length][length];
+		
+		grid = new char[length][length];
 		regions = makeStrangeRegions();
-		System.out.println("Done regions");
+		
+		System.out.println(toString(regions));
+		
 		generateBoard();
 
 		System.out.println(this);
@@ -55,7 +70,7 @@ public class Board {
 		//		System.out.println(checkGrid(grid,true));
 	}
 
-	public int[][] getGrid(){
+	public char[][] getGrid(){
 		return grid;
 	}
 
@@ -79,7 +94,7 @@ public class Board {
 	 * @param c
 	 * @return Whether the attempt was successful
 	 */
-	private boolean fillGrid(int[][] grid, int r, int c){
+	private boolean fillGrid(char[][] grid, int r, int c){
 
 		//		System.out.println("r: " + r + " c: " + c);
 
@@ -101,21 +116,20 @@ public class Board {
 			}
 		}
 
-		LinkedList<Integer> numbers = new LinkedList<Integer>();
+		LinkedList<Character> numbers = new LinkedList<Character>();
 		for (int i = 1; i <= length; i++) {
-			numbers.add(i);
+			numbers.add(symbols[i]);
 		}
 
 		//A random order of numbers allows different boards to be made
 		Collections.shuffle(numbers);
 
-		int[][] newGrid = cloneArray(grid);
+		char[][] newGrid = cloneArray(grid);
 
 		while(!numbers.isEmpty()){
 
-			int n = numbers.remove();
-
-			newGrid[r][c] = (char)n;
+			char n = numbers.remove();
+			newGrid[r][c] = n;
 
 			if (fillGrid(newGrid,r,c+1)){
 				return true;
@@ -126,7 +140,7 @@ public class Board {
 		return false;
 	}
 
-	private boolean checkGrid(int[][] grid, boolean complete){
+	private boolean checkGrid(char[][] grid, boolean complete){
 
 		if (complete){
 			//Check for 0's
@@ -171,7 +185,7 @@ public class Board {
 
 	}
 
-	private boolean checkSquareRegion(int[][] grid){
+	private boolean checkSquareRegion(char[][] grid){
 
 		for (int i = 0; i < cell; i++) {
 			for (int j = 0; j < cell; j++) {				
@@ -194,7 +208,7 @@ public class Board {
 				
 				for (int a = 0; a < cell; a++) {
 					for (int b = 0; b < cell; b++) {
-						grid[i*cell+a][j*cell+b] = section;
+						grid[i*cell+a][j*cell+b] = symbols[section];
 					}
 				}
 				section++;
@@ -218,16 +232,19 @@ public class Board {
 
 		int[][] grid = new int[length][length];
 
-		fillStrangeCorners(grid);
+		grid = fillStrangeCorners(grid);
+		
+		System.out.println("g11"+grid[1][1] + toString(grid));
 
 		int section = 5;		//'0' is a valid section
 		int direction = 0; //up, down, left, right
 		while (section < length){
 			int count = 0;
-			fillStrangeSpaces(grid, section, direction);
+			grid = fillStrangeSpaces(grid, section, direction);
 			section++;
 			direction++;
 		}
+		System.out.println(grid[1][2]);
 		return grid;
 	}
 
@@ -285,13 +302,13 @@ public class Board {
 	}
 
 
-	private boolean checkStrangeRegion(int[][] grid){
+	private boolean checkStrangeRegion(char[][] grid){
 
 		//		int[][] regions = makeStrangeRegions();
 
-		HashSet<Integer>[] digits = (HashSet<Integer>[])new HashSet[length];
+		HashSet<Character>[] digits = (HashSet<Character>[])new HashSet[length];
 		for (int i = 0; i < digits.length; i++) {
-			digits[i] = new HashSet<Integer>();
+			digits[i] = new HashSet<Character>();
 		}
 
 		for (int i = 0; i < length; i++) {
@@ -299,9 +316,8 @@ public class Board {
 
 				if (regions[i][j] != 0){
 
-					int n = grid[i][j];
-
-					if (n > 0){
+					char n = grid[i][j];
+					if (n != '0'){
 						if (!digits[regions[i][j]].add(n)){
 							return false;
 						}
@@ -316,13 +332,13 @@ public class Board {
 
 	}
 
-	private boolean checkRegion(int[][] grid, int x, int y, int dx, int dy){
+	private boolean checkRegion(char[][] grid, int x, int y, int dx, int dy){
 
-		HashSet<Integer> digits = new HashSet<Integer>(length);
+		HashSet<Character> digits = new HashSet<Character>(length);
 
 		for (int a = 0; a < dx; a++) {
 			for (int b = 0; b < dy; b++) {				
-				int n = grid[x + a][y + b];
+				char n = grid[x + a][y + b];
 
 				if (n > 0){
 					if (! digits.add(n)){
@@ -357,12 +373,12 @@ public class Board {
 		return arr;
 	}
 
-	private int[][] cloneArray(int[][] arr){
+	private char[][] cloneArray(char[][] grid2){
 
-		int[][] newArr = new int[length][length];
+		char[][] newArr = new char[length][length];
 
 		for (int i = 0; i < newArr.length; i++) {
-			newArr[i] = arr[i].clone();
+			newArr[i] = grid2[i].clone();
 		}
 
 		return newArr;
@@ -373,10 +389,7 @@ public class Board {
 		return (toString(grid));
 	}
 
-	public String toString(int[][] arr){
-
-		char[][] grid = toChar(arr);
-
+	public String toString(char[][] arr) {
 		String s = "";
 
 		int stringLength = 0;
@@ -412,7 +425,13 @@ public class Board {
 		s += "\n";
 
 		return s;
+	}
+	
+	public String toString(int[][] arr){
 
+		char[][] grid = toChar(arr);
+
+		return toString(grid);
 	}
 
 }
