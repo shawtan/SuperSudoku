@@ -1,0 +1,12 @@
+html, body {
+
+}
+
+.container {
+	width: 800px;
+	margin: 0 auto;
+}
+
+.cell {
+	border: 1px solid #000;
+}

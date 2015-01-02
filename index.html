@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Advanced Sudoku</title>
+	<meta name="description" content="Sudoku with a twist!">
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	<!-- <script src="singleton.sudoku.js"></script> -->
+	<script src="sudoku.js"></script>
+	<link rel="stylesheet" href="game.css">
+</head>
+<body>
+	<script type="text/javascript">
+	$( document ).ready( function() {
+		var b = new Board();
+		b.init(5);
+
+		var game = Sudoku.getInstance();
+		$( '#container').append( game.getGameBoard() );
+
+		$( '#solve').click( function() {
+			game.solve();
+		} );
+		$( '#validate').click( function() {
+			game.validate();
+		} );
+		$( '#reset').click( function() {
+			game.reset();
+		} );
+	} );
+	buildGUI();
+	</script>
+	<h1>Sudoku</h1>
+	<div id="container"></div>
+	<div id="menu" class="sudoku-menu">
+		<button id="solve">Solve</button>
+		<button id="validate">Validate Board</button>
+		<button id="reset">Reset</button>
+		<form method="GET">
+			Dimensions:
+			<input type="number" name="length" value="8" min="4" max="10">
+			<input type="submit" value="New Puzzle">
+		</form>
+	</div>
+</body>
+</html>
