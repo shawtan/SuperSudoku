@@ -6,15 +6,17 @@
 	<meta name="description" content="Sudoku with a twist!">
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 	<!-- <script src="singleton.sudoku.js"></script> -->
-	<script src="sudoku.js"></script>
+	<script src="js/Board.js"></script>
+	<script src="js/Game.js"></script>
+	<script src="js/Graph.js"></script>
 	<link rel="stylesheet" href="game.css">
 </head>
 <body>
 	<script type="text/javascript">
 	$( document ).ready( function() {
-		var b = new Board();
-		b.init(5);
+		//var b = new Board(5);
 
+		/*
 		var game = Sudoku.getInstance();
 		$( '#container').append( game.getGameBoard() );
 
@@ -27,18 +29,20 @@
 		$( '#reset').click( function() {
 			game.reset();
 		} );
+*/
+	new Game(7).buildHTML();
 	} );
-	buildGUI();
+	//new Board(6);
 	</script>
 	<h1>Sudoku</h1>
-	<div id="container"></div>
+	<div id="container">container</div>
 	<div id="menu" class="sudoku-menu">
 		<button id="solve">Solve</button>
 		<button id="validate">Validate Board</button>
 		<button id="reset">Reset</button>
 		<form method="GET">
 			Dimensions:
-			<input type="number" name="length" value="8" min="4" max="10">
+			<input type="number" name="length" value="8" min="5" max="10">
 			<input type="submit" value="New Puzzle">
 		</form>
 	</div>

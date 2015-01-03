@@ -5,17 +5,6 @@ public class ColorGeneration {
 
 	public static void main(String[] args) {
 
-		
-		LinkedList<Integer> l = new LinkedList<Integer>();
-		l.add(1);
-		l.add(3);
-		l.add(5);
-		l.add(4);
-		
-		System.out.println(l.remove(3));
-		System.out.println(l.add(-2));
-		System.out.println(l);
-		
 		int[] cc  = {
 				0xFFB300, // Vivid Yellow
 				0x803E75, // Strong Purple
@@ -43,14 +32,8 @@ public class ColorGeneration {
 		
 		
 		for (int i = 0; i < cc.length; i++) {
-			System.out.println("new Color(0x"+Integer.toHexString(cc[i])+"),");
+			System.out.println("$color" + i + ": "+Integer.toHexString(cc[i])+";");
 		}
-
-	}
-
-	class HSLColor{
-
-
 
 	}
 
