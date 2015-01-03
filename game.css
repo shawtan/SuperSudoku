@@ -30,6 +30,11 @@ button, h1 {
 
 .sudoku-container td {
 	margin: 0;
+	width: 40px;
+	height: 40px;
+	text-align: center;
+	font-size: 20px;
+	padding: 0;
 }
 .sudoku-container input {
 	width: 40px;
@@ -50,15 +55,15 @@ button, h1 {
 
 
 .sudoku-region-0 {
-	background: #ccc;
+	background: #eee;
 }
 .sudoku-region-1 {
-	background: #eee;
+	background: #ccc;
 }
 .sudoku-region-2 {
 	background: #aaa;
 }
 .sudoku-region-3 {
-	background: #fff;
+	background: #888;
 }
 

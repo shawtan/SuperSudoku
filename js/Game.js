@@ -3,7 +3,7 @@ function Game(size) {
   this.board = new Board(size);
   this.graph = new Graph(this.board.regions);
 
-  this.$cellMatrix = {};
+  this.$cells = {};
 
 
   this.setup();
@@ -24,19 +24,19 @@ Game.prototype.buildHTML = function () {
 
   for ( var i = 0; i < this.board.size; i++ ) {
     $tr = $( '<tr>' );
-    this.$cellMatrix[i] = {};
+    this.$cells[i] = {};
 
     for ( var j = 0; j < this.board.size; j++ ) {
           // Build the input
-          this.$cellMatrix[i][j] = $( '<input>' )
+          this.$cells[i][j] = $( '<input>' )
           .attr( 'maxlength', 1 )
           .data( 'row', i )
           .data( 'col', j )
           .on( 'keyup', $.proxy( this.onKeyUp, this ) );
 
-          $td = $( '<td>' ).append( this.$cellMatrix[i][j] );
-          //this.$cellMatrix[i][j].val(this.board.grid[i][j]);
-          //$td.html(this.board.grid[i][j]);
+          $td = $( '<td>' ).append( this.$cells[i][j] );
+          //this.$cells[i][j].val(this.board.grid[i][j]);
+          $td.html(this.board.grid[i][j]);
           
           // Calculate section ID
           //var reg = this.board.regions[i][j];
