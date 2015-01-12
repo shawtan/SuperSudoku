@@ -45,11 +45,11 @@ Graph.prototype.arrayToGraph = function (arr) {
 Graph.prototype.toColor = function (graph) {
 
 	var isIndexUsed = function (index, colArr, n, arr) {
-		console.log("index="+index+" n="+n+" arr=" + arr);
+		//console.log("index="+index+" n="+n+" arr=" + arr);
 		for (var i=0; i<arr.length; i++) {
 			var key = arr[i];
 			if ((key < n) && (colArr[key] == index)){
-				console.log("key="+key);
+				//console.log("key="+key);
 				return true;
 			}
 		}

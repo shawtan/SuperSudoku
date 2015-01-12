@@ -1,26 +1,34 @@
 function Board(size) {
+	
 	//Size should be bigger than 4
 	this.size = size;
 
 	this.regions = [];
 	this.grid = [];
+	this.puzzle = [];
 	for (var i = 0; i < size; i++) {
 		this.regions[i] = [];
 		this.grid[i] = [];
+		this.puzzle[i] = [];
 
 		for (var j = 0; j < size; j++) {
 			this.regions[i][j] = 0;
 			this.grid[i][j] = 0;
+			this.puzzle[i][j] = 0;
 		}
 	};
 
 	this.makeRegions();
 	console.log("Regions:")
-	this.printBoard(this.regions);
+	console.log(this.printBoard(this.regions));
 
 	this.generateBoard();
 	console.log("Grid:");
-	this.printBoard(this.grid);
+	console.log(this.printBoard(this.grid));
+
+
+	this.createHoles();
+	console.log(this.printBoard(this.puzzle));
 }
 
 Board.prototype.makeRegions = function () {
@@ -94,7 +102,7 @@ Board.prototype.makeRegionSpaces = function(section, direction){
 
 Board.prototype.generateBoard = function () {
 
-	if (!this.solveGame(0, 0)){
+	if (!this.solveGame(0, 0)) {
 		console.log("No valid board can be made");
 	}
 
@@ -116,7 +124,7 @@ Board.prototype.solveGame = function(r, c) {
 	}
 
 	var reg = this.regions[r][c];
-	var validNums = this.findValidNums(r, c);
+	var validNums = this.findValidNums(r, c, this.grid);
 
 	for (var i = 0; i < validNums.length; i++) {
 
@@ -132,16 +140,53 @@ Board.prototype.solveGame = function(r, c) {
 	return false;
 };
 
-Board.prototype.findValidNums = function (r, c) {
+Board.prototype.countSolutions = function (r, c, grid) {
+
+	if (c >= this.size) {
+		c = 0;
+		r++;
+	}
+
+	if (r >= this.size) {
+		return 1;
+	}
+
+	if (grid[r][c] > 0) {
+		return this.countSolutions(r, c+1, grid);
+	}
+
+	var reg = this.regions[r][c];
+	var validNums = this.findValidNums(r, c, grid);
+
+	var count = 0;
+
+	for (var i = 0; i < validNums.length; i++) {
+
+		grid[r][c] = validNums[i];
+
+		count += this.countSolutions(r, c+1, grid);
+
+		grid[r][c] = 0;
+	}
+
+	return count;
+}
+
+Board.prototype.findValidNums = function (r, c, grid) {
 
 	var validNums = [];
 	for (var i = 1; i <= this.size; i++) {
-		if (this.isValidNum(i,r,c)){
+		if (this.isValidNum(i,r,c, grid)){
 			validNums.push(i);
 		}
 	}
 
-    var counter = validNums.length, temp, index;
+	return shuffleArray(validNums);
+
+};
+
+var shuffleArray = function (validNums) {
+	var counter = validNums.length, temp, index;
 
     // While there are elements in the validNums
     while (counter > 0) {
@@ -158,13 +203,12 @@ Board.prototype.findValidNums = function (r, c) {
     }
 
     return validNums;
+}
 
-};
-
-Board.prototype.isValidNum = function (n, r, c) {
+Board.prototype.isValidNum = function (n, r, c, grid) {
 		//Check in columns and rows
 		for (var i = 0; i < this.size; i++) {
-			if (this.grid[r][i] == n || this.grid[i][c] == n){
+			if (grid[r][i] == n || grid[i][c] == n){
 				return false;
 			}
 		}
@@ -174,7 +218,7 @@ Board.prototype.isValidNum = function (n, r, c) {
 		
 		for (var i = 0; i < this.size; i++) {
 			for (var j = 0; j < this.size; j++) {
-				if (this.regions[i][j] == reg && this.grid[i][j] == n){
+				if (this.regions[i][j] == reg && grid[i][j] == n){
 					return false;
 				}
 			}
@@ -183,10 +227,44 @@ Board.prototype.isValidNum = function (n, r, c) {
 		return true;
 	};
 
+	Board.prototype.cloneArray = function (arr) {
+
+		var c = [];
+		for (var i = 0; i < arr.length; i++) {
+			c[i] = arr[i].slice(0);
+		};
+
+		return c;
+
+	};
+
+	Board.prototype.createHoles = function () {
+
+		this.puzzle = this.cloneArray(this.grid);
+		var positionArray = [];
+
+		for (var i = 0; i < this.size; i++) {
+			for (var j = 0; j < this.size; j++) {
+				positionArray.push([i,j]);
+			};
+		};
+
+		positionArray = shuffleArray(positionArray);
+
+		for (var i = 0; i < positionArray.length; i++) {
+			var p = positionArray.pop();
+			//console.log(p);
+			this.puzzle[p[0]][p[1]] = 0;
+			if (this.countSolutions(0,0,this.puzzle) > 1) {
+				this.puzzle[p[0]][p[1]] = this.grid[p[0]][p[1]];
+			}
+
+		};
+	};
+
 	Board.prototype.createGraph = function () {
 
 		this.graph = new Graph(this.regions);
-
 
 	}
 
@@ -199,7 +277,7 @@ Board.prototype.isValidNum = function (n, r, c) {
 			s = s + "\n";
 		}
 
-		console.log(s);
+		return s;
 
 	};
 
