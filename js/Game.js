@@ -35,8 +35,10 @@ Game.prototype.buildHTML = function () {
           .on( 'keyup', $.proxy( this.onKeyUp, this ) );
 
           $td = $( '<td>' ).append( this.$cells[i][j] );
-          //this.$cells[i][j].val(this.board.grid[i][j]);
-          $td.html(this.board.grid[i][j]);
+          //this.$cells[i][j].val(this.board.puzzle[i][j]);
+          if (this.board.puzzle[i][j] > 0){
+          $td.html(this.board.puzzle[i][j]);
+        }
           
           // Calculate section ID
           //var reg = this.board.regions[i][j];
