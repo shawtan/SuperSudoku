@@ -13,7 +13,8 @@
 </head>
 <body>
 	<script type="text/javascript">
-	$( document ).ready( function() {
+	$( document ).ready( function() { 
+		new Game(6).buildHTML();
 		//var b = new Board(5);
 
 		/*
@@ -29,8 +30,11 @@
 		$( '#reset').click( function() {
 			game.reset();
 		} );
-*/
-	new Game(7).buildHTML();
+	*/
+		$( "#dimensions" ).submit(function( event ) {
+			event.preventDefault();
+			new Game($("#length").val()).buildHTML();
+		});
 	} );
 	//new Board(6);
 	</script>
@@ -40,9 +44,9 @@
 		<button id="solve">Solve</button>
 		<button id="validate">Validate Board</button>
 		<button id="reset">Reset</button>
-		<form method="GET">
+		<form id="dimensions" action="index.html">
 			Dimensions:
-			<input type="number" name="length" value="8" min="5" max="10">
+			<input type="number" id="length" value="8" min="5" max="10">
 			<input type="submit" value="New Puzzle">
 		</form>
 	</div>

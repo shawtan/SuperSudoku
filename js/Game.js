@@ -54,6 +54,6 @@ Game.prototype.buildHTML = function () {
       }
       // Return the GUI table
       //return $table;
-      $container.append($table);
+      $container.html($table);
 
     };
