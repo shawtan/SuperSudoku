@@ -1,1 +1,11 @@
 Program that can generate and play sudoku games of up to 16x16
+
+TODO: 
+	GUI:
+		* Working buttons
+		* ability to change size
+		* puzzle checking
+		* Pretty colours
+	Game Play: 
+		* Reaction when puzzle is completed
+		* Use hexadecimal OR Allow 2 digit numbers
