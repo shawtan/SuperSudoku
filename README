@@ -9,8 +9,11 @@ TODO:
 	Game Play: 
 		* Reaction when puzzle is completed
 <<<<<<< HEAD
+<<<<<<< HEAD
 		* Use hexadecimal OR Allow 2 digit numbers
 =======
+=======
+>>>>>>> master
 		* Use hexadecimal OR Allow 2 digit numbers
 
 Error:
@@ -34,5 +37,9 @@ Error:
 0,5,0,3,4,
 0,4,0,0,5,
 
+<<<<<<< HEAD
+[Log] [0, 1, 2, 1, 2] (Graph.js, line 5)
+>>>>>>> master
+=======
 [Log] [0, 1, 2, 1, 2] (Graph.js, line 5)
 >>>>>>> master

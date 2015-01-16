@@ -20,6 +20,7 @@ function Board(size) {
 
 	this.makeRegions();
 <<<<<<< HEAD
+<<<<<<< HEAD
 	console.log("Regions:")
 	console.log(this.printBoard(this.regions));
 
@@ -34,11 +35,19 @@ function Board(size) {
 	console.log("Regions:\n"+this.printBoard(this.regions));
 
 	this.generateBoard();
+=======
+	console.log("Regions:\n"+this.printBoard(this.regions));
+
+	this.generateBoard();
+>>>>>>> master
 	console.log("Grid:\n"+this.printBoard(this.grid));
 
 
 	this.createHoles();
 	console.log("Puzzle:\n"+this.printBoard(this.puzzle));
+<<<<<<< HEAD
+>>>>>>> master
+=======
 >>>>>>> master
 }
 
@@ -239,7 +248,11 @@ Board.prototype.isValidNum = function (n, r, c, grid) {
 	};
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 	Board.prototype.cloneArray = function (arr) {
+=======
+	var cloneArray = function (arr) {
+>>>>>>> master
 =======
 	var cloneArray = function (arr) {
 >>>>>>> master
@@ -256,7 +269,13 @@ Board.prototype.isValidNum = function (n, r, c, grid) {
 	Board.prototype.createHoles = function () {
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 		this.puzzle = this.cloneArray(this.grid);
+=======
+		this.holes = 0;
+
+		this.puzzle = cloneArray(this.grid);
+>>>>>>> master
 =======
 		this.holes = 0;
 
@@ -279,6 +298,11 @@ Board.prototype.isValidNum = function (n, r, c, grid) {
 			if (this.countSolutions(0,0,this.puzzle) > 1) {
 				this.puzzle[p[0]][p[1]] = this.grid[p[0]][p[1]];
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+			} else {
+			//	this.holes++;
+>>>>>>> master
 =======
 			} else {
 			//	this.holes++;
@@ -293,7 +317,11 @@ Board.prototype.isValidNum = function (n, r, c, grid) {
 		this.graph = new Graph(this.regions);
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 	}
+=======
+	};
+>>>>>>> master
 =======
 	};
 >>>>>>> master

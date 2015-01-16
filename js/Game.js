@@ -85,17 +85,23 @@ Game.prototype.buildHTML = function () {
         }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
           $td = $( '<td>' ).append( this.$cells[i][j] );
           //this.$cells[i][j].val(this.board.puzzle[i][j]);
           if (this.board.puzzle[i][j] > 0){
           $td.html(this.board.puzzle[i][j]);
         }
 =======
+=======
+>>>>>>> master
         $td = $( '<td>' ).append( this.$cells[i][j] );
           //this.$cells[i][j].val(this.board.puzzle[i][j]);
           // if (this.board.puzzle[i][j] > 0){
           //   $td.html(this.board.puzzle[i][j]);
           // }
+<<<<<<< HEAD
+>>>>>>> master
+=======
 >>>>>>> master
           
           // Calculate section ID
