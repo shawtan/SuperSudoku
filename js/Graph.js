@@ -2,7 +2,7 @@ function Graph(arr) {
 	
 	this.Ngraph = this.arrayToGraph(arr);
 	this.colorParts = this.toColor(this.Ngraph);
-	console.log(this.colorParts);
+	//console.log(this.colorParts);
 }
 
 Graph.prototype.arrayToGraph = function (arr) {

@@ -19,14 +19,14 @@ function Board(size) {
 	};
 
 	this.makeRegions();
-	console.log("Regions:\n"+this.printBoard(this.regions));
+	//console.log("Regions:\n"+this.printBoard(this.regions));
 
 	this.generateBoard();
-	console.log("Grid:\n"+this.printBoard(this.grid));
+	//console.log("Grid:\n"+this.printBoard(this.grid));
 
 
 	this.createHoles();
-	console.log("Puzzle:\n"+this.printBoard(this.puzzle));
+	//console.log("Puzzle:\n"+this.printBoard(this.puzzle));
 }
 
 Board.prototype.makeRegions = function () {
