@@ -1,17 +1,15 @@
-function Game(size) {
-  this.size           = size; // Size of the grid
-  this.board = new Board(size);
-  this.graph = new Graph(this.board.regions);
+function Game() {
 
   this.$cells = {};
-
-
-  this.setup();
-
-
-
 };
 
+Game.prototype.setSize = function(size) {
+
+    this.size           = size; // Size of the grid
+  this.board = new Board(size);
+  this.graph = new Graph(this.board.regions);
+  this.buildHTML();
+}
 
 Game.prototype.checkComplete = function () {
   if (this.isComplete()){
@@ -36,11 +34,6 @@ Game.prototype.isComplete = function () {
 
   }
 
-  Game.prototype.setup = function () {
-
-    this.won = false;
-
-  };
 
   cellInput = function (game) {
     this.game = game;
@@ -56,20 +49,47 @@ Game.prototype.isComplete = function () {
   }
 }
 
+Game.prototype.solve = function () {
+
+
+  for ( var i = 0; i < this.size; i++ ) {
+    for ( var j = 0; j < this.size; j++ ) {
+
+      if (this.board.puzzle[i][j] == 0){
+        this.$cells[i][j].val(this.board.grid[i][j]);
+      }
+
+    }
+  }
+}
+
+Game.prototype.reset = function () {
+
+  for ( var i = 0; i < this.size; i++ ) {
+    for ( var j = 0; j < this.size; j++ ) {
+
+      if (this.board.puzzle[i][j] == 0){
+        this.$cells[i][j].val("");
+      }
+
+    }
+  }
+}
+
 Game.prototype.buildHTML = function () {
 
-  var $container = $("#container");
+  var $container = $("#game-container");
   var $td, $tr,
   $table = $( '<table>' )
   .addClass( 'sudoku-container' );
 
   var ci = new cellInput(this);
 
-  for ( var i = 0; i < this.board.size; i++ ) {
+  for ( var i = 0; i < this.size; i++ ) {
     $tr = $( '<tr>' );
     this.$cells[i] = {};
 
-    for ( var j = 0; j < this.board.size; j++ ) {
+    for ( var j = 0; j < this.size; j++ ) {
 
       if (this.board.puzzle[i][j] > 0){
         this.$cells[i][j] = this.board.puzzle[i][j];
