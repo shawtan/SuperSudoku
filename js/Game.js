@@ -22,7 +22,7 @@ Game.prototype.isComplete = function () {
 
     for (var i = 0; i < this.size; i++) {
       for (var j = 0; j < this.size; j++) {
-        if(!(/^[1-9]$/).test(this.$cells[i][j]+"")){
+        if(!(/([1-9])+/).test(this.$cells[i][j]+"")){
           if (parseInt(this.$cells[i][j].val()) != this.board.grid[i][j]){
             return false;
           }
@@ -40,7 +40,7 @@ Game.prototype.isComplete = function () {
   // alert("keyup");
   //TODO: Keydown cancel key
   this.keyup = function () {
-    if(!this.value.match(/^[1-9]$/)) {
+    if(!this.value.match(/([1-9])+/)) {
       this.value = "";
     } else {
       //console.log(this.$cells[0][0].html());
@@ -97,7 +97,7 @@ Game.prototype.buildHTML = function () {
           // Build the input
           this.$cells[i][j] = $( '<input>' )
           //.attr( 'type', 'number' )
-          .attr( 'maxlength', 1 )
+          .attr( 'maxlength', this.size/10+1 )
           .data( 'row', i )
           .data( 'col', j )
           .on( 'keyup', ci.keyup);
