@@ -1,4 +1,4 @@
-function Board(size) {
+/*function Board(size) {
 	
 	//Size should be bigger than 4
 	this.size = size;
@@ -40,10 +40,9 @@ function Board(size) {
 	this.createHoles();
 	//console.log("Puzzle:\n"+this.printBoard(this.puzzle));
 
-}
-/*
+}*/
+
 function Board(size, line) {
-	console.log("HERE");
 	//Size should be bigger than 4
 	this.size = size;
 
@@ -69,14 +68,16 @@ function Board(size, line) {
 		for(var j=0; j<size; j++){
 			this.grid[i][j] = line.charAt(i*size+j);
 			this.puzzle[i][j] = line.charAt(i*size+j);
-			console.log(i+","+j+" = " + this.grid[i][j]);
+			// console.log(i+","+j+" = " + this.grid[i][j]);
 		}
 	}
+	// console.log(this.printBoard(this.grid));
+
 
 	this.solveGame(0,0);
 
 
-}*/
+}
 
 Board.prototype.makeRegions = function () {
 
