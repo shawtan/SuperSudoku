@@ -1,11 +1,13 @@
-var xhr = new XMLHttpRequest();
-xhr.open('GET', '/path/to/database.sqlite', true);
-xhr.responseType = 'arraybuffer';
+var s = "";
+var size = 10;
+//for (var size = 8; size <= 7; size++) {
+	for (var i = 0; i < 3; i++) {
+		  var b = new Board(size);
+		  var str = b.outString(b.puzzle);
+		  console.log(str);
+		  s += b.outString(b.puzzle) + "\n";
+		  console.log("i="+i);
+	};
+//};
 
-xhr.onload = function(e) {
-  var uInt8Array = new Uint8Array(this.response);
-  var db = new SQL.Database(uInt8Array);
-  var contents = db.exec("SELECT * FROM my_table");
-  // contents is now [{columns:['col1','col2',...], values:[[first row], [second row], ...]}]
-};
-xhr.send();
+document.getElementById('cmd').value = s;

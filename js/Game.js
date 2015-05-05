@@ -5,10 +5,30 @@ function Game() {
 
 Game.prototype.setSize = function(size) {
 
-    this.size           = size; // Size of the grid
+  this.size           = size; // Size of the grid
+
+  var request = new XMLHttpRequest();
+  request.onload = function () {
+
+  	var fileContentLines = this.responseText.split('\n');
+  	var index = Math.floor(Math.random() * fileContentLines.length);
+  	var line = fileContentLines[index];
+console.log("line="+line);
+
+  	this.board = new Board(this.size, line);
+  	this.graph = new Graph(this.board.regions);
+  	this.buildHTML();
+
+  }
+
+  request.open('GET', 'puzzle/'+size+'.txt');
+  request.send();
+
+/*
   this.board = new Board(size);
   this.graph = new Graph(this.board.regions);
   this.buildHTML();
+  */
 }
 
 Game.prototype.checkComplete = function () {
