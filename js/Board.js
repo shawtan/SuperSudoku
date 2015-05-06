@@ -234,8 +234,8 @@ Board.prototype.findValidNums = function (r, c, grid) {
 			validNums.push(i);
 		}
 	}
-	//return validNums;
-	return shuffleArray(validNums);
+	return validNums;
+	// return shuffleArray(validNums);
 
 };
 
