@@ -17,7 +17,7 @@ Game.prototype.setSize = function(size) {
   	B.board = new Board(size, line);
     B.graph = new Graph(B.board.regions);
   	B.buildHTML();
-    B.solveGame(0,0);
+    window.setTimeout(function(){B.board.solveGame(0,0)},100);
 
   }}(this);
 
