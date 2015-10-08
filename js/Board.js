@@ -74,7 +74,7 @@ function Board(size, line) {
 	// console.log(this.printBoard(this.grid));
 
 
-	this.solveGame(0,0);
+	// this.solveGame(0,0);
 
 
 }

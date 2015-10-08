@@ -15,8 +15,9 @@ Game.prototype.setSize = function(size) {
   	var line = fileContentLines[index];
 
   	B.board = new Board(size, line);
-  	B.graph = new Graph(B.board.regions);
+    B.graph = new Graph(B.board.regions);
   	B.buildHTML();
+    B.solveGame(0,0);
 
   }}(this);
 
