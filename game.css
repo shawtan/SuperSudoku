@@ -3,6 +3,9 @@ body {
 	padding: 0;
 	background-color: #eaeef8;
 	color: #0B2161;
+
+	font-family: 'Fira Sans', sans-serif;
+	font-weight: 400;
 }
 
 button, h1 {
@@ -11,17 +14,32 @@ button, h1 {
 	text-align: center;
 }
 
+button {
+	background: #3498db;
+	font-family: Arial;
+	color: #ffffff;
+	font-size: 18px;
+	border-radius: 5px;
+	padding: 5px;
+	margin: 10px;
+	text-decoration: none;
+}
+
+button:hover {
+	background: #3cb0fd;
+	text-decoration: none;
+}
+
+#outer {
+	text-align: center;
+}
+
 .sudoku-menu {
 	width: 50%;
 	text-align: center;
 	margin-left: auto;
 	margin-right: auto;
-}
-
-.sudoku-menu button {
-	font-size: 24px;
-	margin: 10px;
-	padding: 5px;
+	padding-top: 10px;
 }
 
 .sudoku-container {
@@ -45,7 +63,7 @@ button, h1 {
 	text-align: center;
 	font-size: 20px;
 	padding: 0;
-	border: 1px #ccc solid;
+	border: 2px #ccc solid;
 	background: transparent;
 }
 
@@ -58,7 +76,7 @@ button, h1 {
 
 
 .sudoku-region-0 {
-	background: #d8cef6;
+	background: #c7b8f2;
 }
 .sudoku-region-1 {
 	background: #8181f7;

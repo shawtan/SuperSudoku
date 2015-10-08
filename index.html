@@ -4,56 +4,46 @@
 	<meta charset="utf-8">
 	<title>Super Sudoku</title>
 	<meta name="description" content="Sudoku with a twist!">
+	<link rel="stylesheet" href="game.css">
+	<link href='http://fonts.googleapis.com/css?family=Fira+Sans:300,400' rel='stylesheet' type='text/css'>
+	<!-- <script src="https://raw.githubusercontent.com/kripken/sql.js/master/js/sql.js"></script>
+	<script src="js/loadDB.js"></script> -->
+</head>
+<body>
+
+	<div id="outer">
+	<h1>SUPER SUDOKU</h1>
+	<p>Fill in the grid so that every row, column and coloured region contains a different number.</p>
+		<div id="game-container"></div>
+		<div id="menu" class="sudoku-menu">
+			<button id="solve">Solve</button>
+			<button id="reset">Reset</button>
+			<div id="dimensions">
+				Dimensions:
+				<select id="length">
+					<option>5</option>
+					<option>6</option>
+					<option>7</option>
+					<option>8</option>
+					<option>9</option>
+					<!-- <option>10</option>
+					<option>11</option>
+					<option>12</option>
+					<option>13</option>
+					<option>14</option>
+					<option>15</option> -->
+				</select>
+				<button id="new-game" type="submit">New Puzzle</button>
+			</div>
+		</div>
+		<p class="info">
+			Created by <a href="http://shawtan.me">Shaw Tan</a>. Source code availiable on <a href="http://github.com/tanx8/SuperSudoku">GitHub</a>.
+		</p>
+	</div>
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-	<!-- <script src="singleton.sudoku.js"></script> -->
 	<script src="js/Board.js"></script>
 	<script src="js/Game.js"></script>
 	<script src="js/Graph.js"></script>
-	<script src="https://raw.githubusercontent.com/kripken/sql.js/master/js/sql.js"></script>
-	<script src="js/loadDB.js"></script>
-	<link rel="stylesheet" href="game.css">
-</head>
-<body>
-	<script type="text/javascript">
-	$( document ).ready( function() { 
-		new Game(5).buildHTML();
-		//var b = new Board(5);
-
-		/*
-		var game = Sudoku.getInstance();
-		$( '#container').append( game.getGameBoard() );
-
-		$( '#solve').click( function() {
-			game.solve();
-		} );
-		$( '#validate').click( function() {
-			game.validate();
-		} );
-		$( '#reset').click( function() {
-			game.reset();
-		} );
-	*/
-		$( "#dimensions" ).submit(function( event ) {
-			event.preventDefault();
-			new Game($("#length").val()).buildHTML();
-		});
-	} );
-	//new Board(6);
-	</script>
-	<h1>SUPER SUDOKU</h1>
-	<div id="container"></div>
-	<div id="menu" class="sudoku-menu">
-		<button id="solve">Solve</button>
-		<button id="validate">Validate Board</button>
-		<button id="reset">Reset</button>
-		<form id="dimensions" action="index.html">
-			Dimensions:
-			<input type="number" id="length" value="8" min="5" max="9">
-			<input type="submit" value="New Puzzle">
-		</form>
-	</div>
-	<p class="info">
-		Created by <a href="http://shawtan.me">Shaw Tan</a>. Source code availiable on <a href="http://github.com/tanx8/SuperSudoku">GitHub</a>.
-	</p>
+	<script src="js/init.js"></script>
 </body>
 </html>
